@@ -6,8 +6,9 @@ const Home = () => {
   return (
     <CenteredContent>
       <Button>List of Anime</Button>
-      <Button>This button will 404</Button>
-      <Button color='secondary'>This button will also 404</Button>
+      <Button to='/qwerty'>This button will 404</Button>
+      <Button to='/azerty' color='secondary'>This button will also 404</Button>
+      <Button onClick={() => window.alert('!')} variant='outlined'>This button will alert</Button>
       <Button disabled={true}>Disabled button</Button>
     </CenteredContent>
   )

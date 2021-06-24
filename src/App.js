@@ -14,7 +14,7 @@ export default function App() {
       <Container>
         <Switch>
           <Route path='/anilist' component={AnilistPage} />
-          <Route path='/' component={HomePage} />
+          <Route exact path='/' component={HomePage} />
 
           <Route component={NotFoundPage} />
         </Switch>
