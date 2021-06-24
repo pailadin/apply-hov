@@ -16,10 +16,9 @@ const client = new ApolloClient({
   cache: new InMemoryCache({
     typePolicies: {
       Page: {
-        keyArgs: ['page', 'perPage'],
-      },
-      Media: {
-        keyArgs: ['search', 'sort'],
+        // TODO Check if nested keys work (probably not)
+        keyArgs: ['pageInfo.page', 'pageInfo.perPage', 'media.search'],
+        merge: true,
       },
     },
   }),
