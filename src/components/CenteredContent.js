@@ -1,5 +1,5 @@
 import React, { memo } from 'react';
-import { Grid } from '@material-ui/core';
+import { Container, Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles(theme => ({
@@ -13,18 +13,20 @@ const CenteredContent = ({ children }) => {
   const classes = useStyles();
 
   return (
-    <Grid
-      container
-      classes={{ root: classes.containerRoot }}
-      spacing={0}
-      align='center'
-      justify='center'
-      direction='column'
-    >
-      <Grid item>
-        {children}
+    <Container>
+      <Grid
+        container
+        classes={{ root: classes.containerRoot }}
+        spacing={0}
+        align='center'
+        justify='center'
+        direction='column'
+      >
+        <Grid item>
+          {children}
+        </Grid>
       </Grid>
-    </Grid>
+    </Container>
   )
 }
 
