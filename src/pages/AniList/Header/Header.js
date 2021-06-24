@@ -8,26 +8,29 @@ import { clamp, isNil, noop, omitBy } from 'lodash';
 import Container from './Container';
 import BackButton from './BackButton';
 import SearchButton from './SearchButton';
+import Pagination from './Pagination';
 
 const DEFAULT_INITIAL_FORM_VALUES = { search: '' };
 
 const Box = props => <BoxBase component='span' {...props} />
 
 const Header = ({
-  fetchData,
-  fetchMoreData,
+  refetch,
   currentPage,
   lastPage,
   initialValues,
   setInitialValues,
+  hasData,
 }) => {
-  const handleSearch = async (variables, { setSubmitting }) => {  
+  const handleSearch = async (variables, { setSubmitting }) => {
     try {
       setSubmitting(true);
-      await fetchData({
+
+      await refetch({
         ...omitBy(variables, isNil),
         page: 1,
       });
+
       setInitialValues(variables);
 
     } catch (e) {
@@ -40,17 +43,31 @@ const Header = ({
     }
   }
 
+  const changePageBase = ({ resetForm, setSubmitting }) => async page => {
+    resetForm();
+
+    try {
+      setSubmitting(true);
+      // fetchMore was not working here TODO look into it
+      await refetch({ page: clamp(page, 1, lastPage) });
+
+    } catch (e) {
+      console.error(e);
+      window.alert('Error fetching more data!');
+
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
   return (
     <Formik
       initialValues={initialValues}
       enableReinitialize={true}
       onSubmit={handleSearch}
     >
-      {({ submitForm, resetForm, isSubmitting }) => {
-        const changePage = page => {
-          resetForm();
-          fetchMoreData({ variables: { page: clamp(page, 1, lastPage) }});
-        };
+      {({ submitForm, resetForm, setSubmitting, isSubmitting }) => {
+        const changePage = changePageBase({ resetForm, setSubmitting });
 
         return (
           <Container>
@@ -72,8 +89,16 @@ const Header = ({
 
             <SearchButton onClick={submitForm} disabled={isSubmitting} />
 
-            <div onClick={() => changePage(currentPage - 1)}>PREV PAGE</div>
-            <div onClick={() => changePage(currentPage + 1)}>NEXT PAGE</div>
+            {
+              hasData && (
+                <Pagination
+                  currentPage={currentPage}
+                  lastPage={lastPage}
+                  changePage={changePage}
+                  disabled={isSubmitting}
+                />
+              )
+            }
           </Container>
         )
       }}
@@ -82,21 +107,21 @@ const Header = ({
 }
 
 Header.propTypes = {
-  fetchData: PropTypes.func.isRequired,
-  fetchMoreData: PropTypes.func.isRequired,
+  refetch: PropTypes.func.isRequired,
   currentPage: PropTypes.number.isRequired,
   lastPage: PropTypes.number.isRequired,
   initialValues: PropTypes.object.isRequired,
   setInitialValues: PropTypes.func.isRequired,
+  hasData: PropTypes.bool,
 }
 
 Header.defaultProps = {
-  fetchData: noop,
-  fetchMoreData: noop,
+  refetch: noop,
   currentPage: 1,
   lastPage: 1,
   initialValues: DEFAULT_INITIAL_FORM_VALUES,
   setInitialValues: noop,
+  hasData: false,
 }
 
 export default memo(Header);
