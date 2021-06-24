@@ -5,7 +5,7 @@ export const ANIME_LIST = gql`
     $page: Int = 1,
     $perPage: Int = 50,
     $search: String,
-    $sort: [MediaSort] = [TRENDING, POPULARITY_DESC, SCORE_DESC, TITLE_ROMAJI]
+    $sort: [MediaSort] = [POPULARITY_DESC, SCORE_DESC, TITLE_ROMAJI]
   ) {
     Page(page: $page, perPage: $perPage) {
       pageInfo {
