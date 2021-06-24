@@ -20,6 +20,8 @@ const useStyles = makeStyles(theme => ({
     flex: 1,
     paddingTop: '2rem',
     paddingBottom: '2rem',
+    paddingLeft: '4rem',
+    paddingRight: '4rem',
     overflow: 'auto',
   },
 }));
@@ -34,8 +36,6 @@ const Anilist = () => {
   const currentPage = get(result, 'data.Page.pageInfo.currentPage', 1);
   const lastPage = get(result, 'data.Page.pageInfo.lastPage', 1);
   const data = get(result, 'data.Page.media', [])
-
-  console.log({ result, data });
 
   return (
     <>

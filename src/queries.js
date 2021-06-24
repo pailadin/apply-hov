@@ -10,8 +10,9 @@ export const ANIME_LIST = gql`
         lastPage
         hasNextPage
       }
-      media(sort: [TRENDING, SCORE_DESC, POPULARITY_DESC, TITLE_ROMAJI], search: $search) {
+      media(sort: [TRENDING, POPULARITY_DESC, SCORE_DESC, TITLE_ROMAJI], search: $search) {
         id
+        description
         title {
           romaji
           english
@@ -20,10 +21,14 @@ export const ANIME_LIST = gql`
         coverImage {
           large
         }
+        bannerImage
         isAdult
-        status
         meanScore
         popularity
+        startDate {
+          year
+          month
+        }
       }
     }
   }
