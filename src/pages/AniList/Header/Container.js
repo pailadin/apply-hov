@@ -5,7 +5,10 @@ import { makeStyles } from '@material-ui/core/styles';
 const useStyles = makeStyles((theme) => ({
   root: {
     flexShrink: 0,
-    minHeight: '3rem',
+    minHeight: '2rem',
+    padding: '0.5rem',
+    display: 'flex',
+    alignItems: 'center',
   },
 }));
 

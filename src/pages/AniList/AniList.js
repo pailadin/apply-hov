@@ -3,7 +3,7 @@ import { Box, Container } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { useQuery } from 'utils';
 import { ANIME_LIST as QUERY } from 'queries';
-import { Header, Footer } from './headerFooter';
+import Header from './Header';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -35,8 +35,6 @@ const Anilist = () => {
       <Container className={classes.content} maxWidth='xl'>
         TODO
       </Container>
-      
-      <Footer />
     </Box>
   )
 }
