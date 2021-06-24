@@ -35,7 +35,7 @@ client.defaultOptions = {
 ReactDOM.render(
   <React.StrictMode>
     <ApolloProvider client={client}>
-      <BrowserRouter basename={process.env.PUBLIC_URL}>
+      <BrowserRouter basename={process.env.PUBLIC_URL + '/'}>
         <App />
       </BrowserRouter>
     </ApolloProvider>
