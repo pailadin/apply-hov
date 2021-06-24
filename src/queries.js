@@ -21,6 +21,7 @@ export const ANIME_LIST = gql`
         coverImage {
           large
         }
+        siteUrl
         bannerImage
         isAdult
         meanScore

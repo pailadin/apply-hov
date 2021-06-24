@@ -3,8 +3,6 @@ import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 import {
   Card,
-  CardActionArea,
-  CardMedia,
   CardContent,
   Typography,
   Grid as GridBase,
@@ -14,8 +12,8 @@ import RatingIcon from '@material-ui/icons/StarHalf';
 import PopularityIcon from '@material-ui/icons/People';
 import TimeIcon from '@material-ui/icons/Schedule';
 import { uniq, truncate } from 'lodash';
-import clsx from 'clsx';
 import { stripHtml } from 'string-strip-html';
+import ImageWithLink from './ImageWithLink';
 
 const MAX_DESCRIPTION_LENGTH = 160;
 
@@ -35,22 +33,14 @@ const useStyles = makeStyles({
     minWidth: '15rem',
     maxWidth: '20rem',
   },
-  media: {
-    height: '10rem',
-  },
-  mediaAdult: {
-    filter: 'blur(1rem)',
-    '&:hover': {
-      filter: 'none',
-    },
-  }
 });
 
 const Anime = ({
   titleEnglish,
   titleRomaji,
   titleJapanese,
-  image,
+  imageUrl,
+  url,
   isAdult,
   description,
   score,
@@ -84,46 +74,42 @@ const Anime = ({
 
   return (
     <Card className={classes.root}>
-      <CardActionArea>
-        <CardMedia
-          className={clsx({
-            [classes.media]: true,
-            [classes.mediaAdult]: isAdult,
-          })}
-          image={image}
-          title={title}
-        />
+      <ImageWithLink
+        imageUrl={imageUrl}
+        url={url}
+        isAdult={isAdult}
+        title={title}
+      />
 
-        <CardContent>
-          <Typography gutterBottom variant='h6' component='h2'>
-            {title}
-          </Typography>
+      <CardContent>
+        <Typography gutterBottom variant='h6' component='h2'>
+          {title}
+        </Typography>
 
-          {
-            cleanDescription && (
-              <Typography variant='body2' color='textSecondary' component='p'>
-                {cleanDescription}
-              </Typography>
-            )
-          }
+        {
+          cleanDescription && (
+            <Typography variant='body2' color='textSecondary' component='p'>
+              {cleanDescription}
+            </Typography>
+          )
+        }
 
-          <Grid>
-            <Grid item xs={4}>
-              <PopularityIcon /> {popularity}
-            </Grid>
-
-            <Grid item xs={4}>
-              <RatingIcon /> {score}
-            </Grid>
-            
-            <Grid item xs={4}>
-              {dateString && (<>
-                <TimeIcon /> {dateString}
-              </>)}
-            </Grid>
+        <Grid>
+          <Grid item xs={4}>
+            <PopularityIcon /> {popularity}
           </Grid>
-        </CardContent>
-      </CardActionArea>
+
+          <Grid item xs={4}>
+            <RatingIcon /> {score}
+          </Grid>
+          
+          <Grid item xs={4}>
+            {dateString && (<>
+              <TimeIcon /> {dateString}
+            </>)}
+          </Grid>
+        </Grid>
+      </CardContent>
     </Card>
   );
 }
@@ -132,7 +118,8 @@ Anime.propTypes = {
   titleEnglish: PropTypes.string,
   titleRomaji: PropTypes.string,
   titleJapanese: PropTypes.string,
-  image: PropTypes.string.isRequired,
+  imageUrl: PropTypes.string.isRequired,
+  url: PropTypes.string,
   description: PropTypes.string,
   isAdult: PropTypes.bool,
   score: PropTypes.number,

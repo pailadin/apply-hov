@@ -17,8 +17,8 @@ const Animes = ({ data, ...LoadingProps }) => {
               titleEnglish={row?.title?.english}
               titleRomaji={row?.title?.romaji}
               titleJapanese={row?.title?.native}
-              image={row?.coverImage?.large}
-              // image={row?.bannerImage}
+              imageUrl={row?.coverImage?.large}
+              url={row?.siteUrl}
               description={row?.description}
               isAdult={row?.isAdult}
               score={row?.meanScore}
