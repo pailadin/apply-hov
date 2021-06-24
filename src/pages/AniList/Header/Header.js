@@ -25,14 +25,13 @@ const Header = ({
   const [currentPage, setCurrentPage] = useState(1);
 
   const handleSearch = async (variables) => {
-    setHidePagination(true);
-
     try {
       await refetch({
         ...omitBy(variables, isEmpty),
         page: 1,
       });
 
+      setCurrentPage(1);
       setInitialValues(variables);
 
     } catch (e) {
