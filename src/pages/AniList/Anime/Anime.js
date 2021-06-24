@@ -29,9 +29,12 @@ const Grid = ({ children, ...rest }) => (
 )
 
 const useStyles = makeStyles({
-  root: {
+  cardRoot: {
     minWidth: '15rem',
     maxWidth: '20rem',
+  },
+  gridContainerRoot: {
+    marginTop: '1rem',
   },
 });
 
@@ -73,7 +76,7 @@ const Anime = ({
     : '';
 
   return (
-    <Card className={classes.root}>
+    <Card className={classes.cardRoot}>
       <ImageWithLink
         imageUrl={imageUrl}
         url={url}
@@ -94,7 +97,7 @@ const Anime = ({
           )
         }
 
-        <Grid>
+        <Grid classes={{ root: classes.gridContainerRoot }}>
           <Grid item xs={4}>
             <PopularityIcon /> {popularity}
           </Grid>
