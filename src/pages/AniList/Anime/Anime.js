@@ -1,4 +1,3 @@
-// Yes the grammar on the filename is wrong, but it's useful
 import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 import {
