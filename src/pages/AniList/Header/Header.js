@@ -1,4 +1,4 @@
-import React, { useState, memo } from 'react';
+import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 import { Box as BoxBase } from '@material-ui/core';
 import { Formik, Field } from 'formik';
@@ -15,15 +15,14 @@ const Box = props => <BoxBase component='span' {...props} />
 
 const Header = ({
   refetch,
+  currentPage,
+  setCurrentPage,
   lastPage,
   initialValues,
   setInitialValues,
   hidePagination,
-  setHidePagination,
   loading,
 }) => {
-  const [currentPage, setCurrentPage] = useState(1);
-
   const handleSearch = async (variables) => {
     try {
       await refetch({
@@ -31,7 +30,6 @@ const Header = ({
         page: 1,
       });
 
-      setCurrentPage(1);
       setInitialValues(variables);
 
     } catch (e) {
@@ -46,6 +44,7 @@ const Header = ({
     const oldPage = currentPage;
 
     try {
+      // Needed as onCompleted does not fire when loading from cache afaik
       setCurrentPage(newPage);
       await refetch({ page: clamp(newPage, 1, lastPage) });
 
@@ -105,21 +104,22 @@ const Header = ({
 
 Header.propTypes = {
   refetch: PropTypes.func.isRequired,
+  currentPage: PropTypes.number.isRequired,
+  setCurrentPage: PropTypes.func.isRequired,
   lastPage: PropTypes.number.isRequired,
   initialValues: PropTypes.object,
   setInitialValues: PropTypes.func.isRequired,
   hidePagination: PropTypes.bool,
-  setHidePagination: PropTypes.func.isRequired,
   loading: PropTypes.bool,
 }
 
 Header.defaultProps = {
   refetch: noop,
+  currentPage: 1,
   lastPage: 1,
   initialValues: DEFAULT_INITIAL_FORM_VALUES,
   setInitialValues: noop,
   hidePagination: true,
-  setHidePagination: noop,
   loading: false,
 }
 

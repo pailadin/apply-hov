@@ -32,13 +32,16 @@ const Anilist = () => {
 
   const [prevSubmitVars, setPrevSubmitVars] = useState(DEFAULT_INITIAL_FORM_VALUES);
   const [hidePagination, setHidePagination] = useState(true);
+  const [currentPage, setCurrentPage] = useState(1);
   const [lastPage, setLastPage] = useState(1);
 
   const result = useQuery(QUERY, {
     variables: omitBy(DEFAULT_INITIAL_FORM_VALUES, isEmpty),
+    
     onCompleted: () => {
       setHidePagination(false);
 
+      setCurrentPage(get(result, 'data.Page.pageInfo.currentPage', 1));
       setLastPage(get(result, 'data.Page.pageInfo.lastPage', 1));
     },
   });
@@ -49,11 +52,12 @@ const Anilist = () => {
     <>
       <Header
         refetch={result?.refetch}
+        currentPage={currentPage}
+        setCurrentPage={setCurrentPage}
         lastPage={lastPage}
         initialValues={prevSubmitVars}
         setInitialValues={setPrevSubmitVars}
         hidePagination={hidePagination}
-        setHidePagination={setHidePagination}
         loading={result?.loading && !result?.inCache}
       />
 
