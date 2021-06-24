@@ -10,9 +10,19 @@ const QUERY_DEFAULT_OPTIONS = {
   fetchPolicy: 'cache-and-network',
   errorPolicy: 'all',
 }
+
 const client = new ApolloClient({
   uri: process.env.GRAPHQL_URI || DEFAULT_GRAPHQL_URI,
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache({
+    typePolicies: {
+      Page: {
+        keyArgs: ['page', 'perPage'],
+      },
+      Media: {
+        keyArgs: ['search', 'sort'],
+      },
+    },
+  }),
 });
 
 // https://github.com/apollographql/apollo-client/issues/2555#issuecomment-648280766:

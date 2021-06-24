@@ -6,8 +6,6 @@ import Loading from 'components/Loading';
 import Anime from './Anime';
 
 const Animes = ({ data, ...LoadingProps }) => {
-  // console.log({ data, loading, inCache }); // TODO REMOVE
-
   return (
     <Loading data={data} {...LoadingProps}>
       <Grid container spacing={4}>

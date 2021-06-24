@@ -1,10 +1,11 @@
 import React, { useState, memo } from 'react';
 import { Container } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { get } from 'lodash';
+import { get, isEmpty, omitBy } from 'lodash';
 
 import { useQuery } from 'utils';
 import { ANIME_LIST as QUERY } from 'queries';
+import { DEFAULT_INITIAL_FORM_VALUES } from './constants';
 import Header from './Header';
 import Animes from './Animes';
 
@@ -29,23 +30,31 @@ const useStyles = makeStyles(theme => ({
 const Anilist = () => {
   const classes = useStyles();
 
-  const [prevSubmitVars, setPrevSubmitVars] = useState(undefined);
-  const result = useQuery(QUERY, { variables: { search: '' }});
+  const [prevSubmitVars, setPrevSubmitVars] = useState(DEFAULT_INITIAL_FORM_VALUES);
+  const [hidePagination, setHidePagination] = useState(true);
+  const [lastPage, setLastPage] = useState(1);
 
-  const currentPage = get(result, 'data.Page.pageInfo.currentPage', 1);
-  const lastPage = get(result, 'data.Page.pageInfo.lastPage', 1);
-  const data = get(result, 'data.Page.media', [])
-  const hasData = data.length > 0;
+  const result = useQuery(QUERY, {
+    variables: omitBy(DEFAULT_INITIAL_FORM_VALUES, isEmpty),
+    onCompleted: () => {
+      setHidePagination(false);
+
+      setLastPage(get(result, 'data.Page.pageInfo.lastPage', 1));
+    },
+  });
+
+  const data = get(result, 'data.Page.media', []);
 
   return (
     <>
       <Header
-        hasData={hasData}
         refetch={result?.refetch}
-        currentPage={currentPage}
         lastPage={lastPage}
         initialValues={prevSubmitVars}
         setInitialValues={setPrevSubmitVars}
+        hidePagination={hidePagination}
+        setHidePagination={setHidePagination}
+        loading={result?.loading && !result?.inCache}
       />
 
       <Container className={classes.content} maxWidth='xl'>

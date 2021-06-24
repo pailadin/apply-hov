@@ -1,33 +1,35 @@
-import React, { memo } from 'react';
+import React, { useState, memo } from 'react';
 import PropTypes from 'prop-types';
 import { Box as BoxBase } from '@material-ui/core';
 import { Formik, Field } from 'formik';
 import { TextField } from 'formik-material-ui';
-import { clamp, isNil, noop, omitBy } from 'lodash';
+import { clamp, isEmpty, noop, omitBy } from 'lodash';
 
+import { DEFAULT_INITIAL_FORM_VALUES } from '../constants';
 import Container from './Container';
 import BackButton from './BackButton';
 import SearchButton from './SearchButton';
 import Pagination from './Pagination';
 
-const DEFAULT_INITIAL_FORM_VALUES = { search: '' };
-
 const Box = props => <BoxBase component='span' {...props} />
 
 const Header = ({
   refetch,
-  currentPage,
   lastPage,
   initialValues,
   setInitialValues,
-  hasData,
+  hidePagination,
+  setHidePagination,
+  loading,
 }) => {
-  const handleSearch = async (variables, { setSubmitting }) => {
-    try {
-      setSubmitting(true);
+  const [currentPage, setCurrentPage] = useState(1);
 
+  const handleSearch = async (variables) => {
+    setHidePagination(true);
+
+    try {
       await refetch({
-        ...omitBy(variables, isNil),
+        ...omitBy(variables, isEmpty),
         page: 1,
       });
 
@@ -37,26 +39,22 @@ const Header = ({
       console.error(e);
       // TODO A nicer looking error with a better message
       window.alert('Error fetching data!');
-
-    } finally {
-      setSubmitting(false);
     }
   }
 
-  const changePageBase = ({ resetForm, setSubmitting }) => async page => {
+  const changePageBase = ({ resetForm }) => async newPage => {
     resetForm();
+    const oldPage = currentPage;
 
     try {
-      setSubmitting(true);
-      // fetchMore was not working here TODO look into it
-      await refetch({ page: clamp(page, 1, lastPage) });
+      setCurrentPage(newPage);
+      await refetch({ page: clamp(newPage, 1, lastPage) });
 
     } catch (e) {
+      setCurrentPage(oldPage);
+
       console.error(e);
       window.alert('Error fetching more data!');
-
-    } finally {
-      setSubmitting(false);
     }
   }
 
@@ -66,8 +64,8 @@ const Header = ({
       enableReinitialize={true}
       onSubmit={handleSearch}
     >
-      {({ submitForm, resetForm, setSubmitting, isSubmitting }) => {
-        const changePage = changePageBase({ resetForm, setSubmitting });
+      {({ submitForm, resetForm }) => {
+        const changePage = changePageBase({ resetForm });
 
         return (
           <Container>
@@ -87,15 +85,15 @@ const Header = ({
               />
             </Box>
 
-            <SearchButton onClick={submitForm} disabled={isSubmitting} />
+            <SearchButton onClick={submitForm} disabled={loading} />
 
             {
-              hasData && (
+              !hidePagination && (
                 <Pagination
                   currentPage={currentPage}
                   lastPage={lastPage}
                   changePage={changePage}
-                  disabled={isSubmitting}
+                  disabled={loading}
                 />
               )
             }
@@ -108,20 +106,22 @@ const Header = ({
 
 Header.propTypes = {
   refetch: PropTypes.func.isRequired,
-  currentPage: PropTypes.number.isRequired,
   lastPage: PropTypes.number.isRequired,
-  initialValues: PropTypes.object.isRequired,
+  initialValues: PropTypes.object,
   setInitialValues: PropTypes.func.isRequired,
-  hasData: PropTypes.bool,
+  hidePagination: PropTypes.bool,
+  setHidePagination: PropTypes.func.isRequired,
+  loading: PropTypes.bool,
 }
 
 Header.defaultProps = {
   refetch: noop,
-  currentPage: 1,
   lastPage: 1,
   initialValues: DEFAULT_INITIAL_FORM_VALUES,
   setInitialValues: noop,
-  hasData: false,
+  hidePagination: true,
+  setHidePagination: noop,
+  loading: false,
 }
 
 export default memo(Header);
