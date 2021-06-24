@@ -21,8 +21,6 @@ const useStyles = makeStyles(theme => ({
     flex: 1,
     paddingTop: '2rem',
     paddingBottom: '2rem',
-    paddingLeft: '4rem',
-    paddingRight: '4rem',
     overflow: 'auto',
   },
 }));

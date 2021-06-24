@@ -8,7 +8,7 @@ import Anime from './Anime';
 const Animes = ({ data, ...LoadingProps }) => {
   return (
     <Loading data={data} {...LoadingProps}>
-      <Grid container spacing={4}>
+      <Grid container justify='center' spacing={4}>
         {data.map(row => (
           <Grid key={row.id} item>
             <Anime
