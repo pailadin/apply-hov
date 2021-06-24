@@ -1,24 +1,28 @@
 // Yes the grammar on the filename is wrong, but it's useful
 import React, { memo } from 'react';
 import PropTypes from 'prop-types';
+import Loading from 'components/Loading';
 
-const Animes = ({ data, loading, inCache }) => {
-  console.log({ data, loading, inCache }); // TODO REMOVE
+const Animes = ({ data, ...LoadingProps }) => {
+  // console.log({ data, loading, inCache }); // TODO REMOVE
 
-  return <div>TODO</div>
+  return (
+    <Loading {...LoadingProps}>
+      TODO
+    </Loading>
+  )
 }
 
 Animes.propTypes = {
-  data: PropTypes.object,
+  data: PropTypes.array,
   loading: PropTypes.bool,
   inCache: PropTypes.bool,
 }
 
 Animes.defaultProps = {
-  data: {},
+  data: [],
   loading: false,
   inCache: false,
 }
-
 
 export default memo(Animes);

@@ -1,5 +1,5 @@
 import React, { useState, memo } from 'react';
-import { Box, Container } from '@material-ui/core';
+import { Container } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { get } from 'lodash';
 
@@ -33,9 +33,12 @@ const Anilist = () => {
   const hasDoneASearch = prevSubmitVars !== undefined;
   const currentPage = get(result, 'data.Page.pageInfo.currentPage', 1);
   const lastPage = get(result, 'data.Page.pageInfo.lastPage', 1);
+  const data = get(result, 'data.Page.media', [])
+
+  console.log({ result, data });
 
   return (
-    <Box className={classes.container}>
+    <>
       <Header
         fetchData={fetchData}
         fetchMoreData={result?.fetchMore}
@@ -46,9 +49,16 @@ const Anilist = () => {
       />
 
       <Container className={classes.content} maxWidth='xl'>
-        { hasDoneASearch && <Animes {...result} /> }
+        { hasDoneASearch && (
+          <Animes
+            data={data}
+            loading={result?.loading}
+            inCache={result?.inCache}
+            error={result?.error}
+          />
+        )}
       </Container>
-    </Box>
+    </>
   )
 }
 
