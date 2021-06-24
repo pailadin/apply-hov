@@ -43,7 +43,7 @@ const Header = ({
       enableReinitialize={true}
       onSubmit={handleSearch}
     >
-      {({ submitForm, resetForm, isSubmitting, setValues }) => {
+      {({ submitForm, resetForm, isSubmitting }) => {
         const changePage = page => {
           resetForm();
           fetchMoreData({ variables: { page: clamp(page, 1, lastPage) }});
@@ -61,6 +61,9 @@ const Header = ({
                 name='search'
                 placeholder='All shows'
                 variant='outlined'
+                onKeyDown={({ key }) => {
+                  if (key === "Enter") submitForm();
+                }}
               />
             </Box>
 
