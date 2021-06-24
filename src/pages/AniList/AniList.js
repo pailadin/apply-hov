@@ -37,7 +37,6 @@ const Anilist = () => {
 
   const result = useQuery(QUERY, {
     variables: omitBy(DEFAULT_INITIAL_FORM_VALUES, isEmpty),
-    
     onCompleted: () => {
       setHidePagination(false);
 

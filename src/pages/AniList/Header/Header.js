@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Box as BoxBase } from '@material-ui/core';
 import { Formik, Field } from 'formik';
 import { TextField } from 'formik-material-ui';
-import { clamp, isEmpty, noop, omitBy } from 'lodash';
+import { clamp, noop } from 'lodash';
 
 import { DEFAULT_INITIAL_FORM_VALUES } from '../constants';
 import Container from './Container';
@@ -23,10 +23,14 @@ const Header = ({
   hidePagination,
   loading,
 }) => {
-  const handleSearch = async (variables) => {
+  const handleSearch = async variables => {
     try {
+      const { search, ...rest } = variables;
+
       await refetch({
-        ...omitBy(variables, isEmpty),
+        ...rest,
+        // https://github.com/apollographql/react-apollo/issues/2300:
+        search: search || undefined,
         page: 1,
       });
 
