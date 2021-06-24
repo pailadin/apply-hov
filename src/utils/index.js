@@ -1,1 +1,1 @@
-export { useQuery } from './apollo';
+export { useQuery, useLazyQuery } from './apollo';

@@ -3,11 +3,11 @@ import { IconButton } from '@material-ui/core';
 import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 import { useHistory } from 'react-router-dom';
 
-const BackButton = () => {
+const BackButton = props => {
   const history = useHistory();
 
   return (
-    <IconButton onClick={() => history.push(`/`)}>
+    <IconButton onClick={() => history.push(`/`)} {...props}>
       <ArrowBackIcon />
     </IconButton>
   )

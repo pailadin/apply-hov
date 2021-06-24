@@ -1,5 +1,6 @@
 import {
   useQuery as useQueryBase,
+  useLazyQuery as useLazyQueryBase,
 } from '@apollo/client';
 
 // Should act the same as the regular "useQuery", but with an extra flag
@@ -11,18 +12,34 @@ export const useQuery = (query, options = {}) => {
     ...options,
   });
 
-  let inCache = true;
-  if (result.loading) {
+  return {
+    ...result,
+    inCache: checkIfInCache(query, result),
+  };
+}
+
+export const useLazyQuery = (query, options) => {
+  const [getData, result] = useLazyQueryBase(query, {
+    notifyOnNetworkStatusChange: true,
+    ...options,
+  });
+
+  return [
+    getData,
+    {
+      ...result,
+      inCache: checkIfInCache(query, result),
+    },
+  ];
+}
+
+const checkIfInCache = (query, { loading, client, variables }) => {
+  if (loading) {
     try {
-      inCache = Boolean(result.client.readQuery({
-        query: query,
-        variables: result.variables
-      }));
+      return Boolean(client.readQuery({ query, variables }));
 
     } catch (error) {
-      inCache = false;
+      return false;
     }
   }
-
-  return { ...result, inCache };
 }

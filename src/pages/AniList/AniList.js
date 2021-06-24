@@ -1,9 +1,12 @@
-import React, { memo } from 'react';
+import React, { useState, memo } from 'react';
 import { Box, Container } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { useQuery } from 'utils';
+import { get } from 'lodash';
+
+import { useLazyQuery } from 'utils';
 import { ANIME_LIST as QUERY } from 'queries';
 import Header from './Header';
+import Animes from './Animes';
 
 const useStyles = makeStyles(theme => ({
   container: {
@@ -24,16 +27,26 @@ const useStyles = makeStyles(theme => ({
 const Anilist = () => {
   const classes = useStyles();
 
-  // const x = useQuery(QUERY, {
-  //   onCompleted: (...z) => console.log(z),
-  // });
+  const [prevSubmitVars, setPrevSubmitVars] = useState(undefined);
+  const [fetchData, result] = useLazyQuery(QUERY);
+
+  const hasDoneASearch = prevSubmitVars !== undefined;
+  const currentPage = get(result, 'data.Page.pageInfo.currentPage', 1);
+  const lastPage = get(result, 'data.Page.pageInfo.lastPage', 1);
 
   return (
     <Box className={classes.container}>
-      <Header />
+      <Header
+        fetchData={fetchData}
+        fetchMoreData={result?.fetchMore}
+        currentPage={currentPage}
+        lastPage={lastPage}
+        initialValues={prevSubmitVars}
+        setInitialValues={setPrevSubmitVars}
+      />
 
       <Container className={classes.content} maxWidth='xl'>
-        TODO
+        { hasDoneASearch && <Animes {...result} /> }
       </Container>
     </Box>
   )

@@ -1,7 +1,7 @@
 import { gql } from '@apollo/client';
 
 export const ANIME_LIST = gql`
-  query Page($page: Int, $perPage: Int, $sort: [MediaSort], $search: String) {
+  query Page($page: Int, $perPage: Int, $search: String) {
     Page(page: $page, perPage: $perPage) {
       pageInfo {
         total
@@ -10,7 +10,7 @@ export const ANIME_LIST = gql`
         lastPage
         hasNextPage
       }
-      media(sort: $sort, search: $search) {
+      media(sort: [TRENDING, SCORE_DESC, POPULARITY_DESC, TITLE_ROMAJI], search: $search) {
         id
         title {
           romaji
