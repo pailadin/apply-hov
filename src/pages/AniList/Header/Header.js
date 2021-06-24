@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { Box as BoxBase } from '@material-ui/core';
 import { Formik, Field } from 'formik';
 import { TextField } from 'formik-material-ui';
-import { clamp, noop } from 'lodash';
+import { clamp, isNil, noop, omitBy } from 'lodash';
 
 import Container from './Container';
 import BackButton from './BackButton';
@@ -24,7 +24,10 @@ const Header = ({
   const handleSearch = async (variables, { setSubmitting }) => {  
     try {
       setSubmitting(true);
-      await fetchData({ variables, page: 1 });
+      await fetchData({
+        ...omitBy(variables, isNil),
+        page: 1,
+      });
       setInitialValues(variables);
 
     } catch (e) {
