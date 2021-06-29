@@ -69,7 +69,6 @@ const Anime = ({
     });
   } catch(e) {}
 
-
   const dateString = startDate.month && startDate.year
     ? `${startDate.month}/${startDate.year}`
     : '';
