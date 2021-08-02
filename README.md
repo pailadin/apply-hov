@@ -1,4 +1,4 @@
-# Getting Started with Create React App
+## A simple project made when I applied for a job:
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
